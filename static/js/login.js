@@ -5,9 +5,18 @@ const usernameInvalid = document.querySelector('.username-invalid')
 const passwordInvalid = document.querySelector('.pwd-invalid')
 
 function checkUsername() {
-    if (username.value.length < 4) {
-        username.setCustomValidity('Username must be at least 4 characters long')
-        usernameInvalid.innerHTML = 'Username must be at least 4 characters long'
+    const reg1 = /^[a-zA-Z0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]{6,16}$/;
+    if (username.value.length < 3 || username.value.length > 18) {
+        username.setCustomValidity('用户名长度必须在4到18个字符之间')
+        usernameInvalid.innerHTML = '用户名长度必须在4到18个字符之间'
+        return false
+    } else if ( !reg1.test(username.value) ) {
+        username.setCustomValidity('用户名只能包含字母、数字和特殊字符')
+        usernameInvalid.innerHTML = '用户名只能包含字母、数字和特殊字符'
+        return false
+    } else if (username.value.indexOf(" ") !== -1) {
+        username.setCustomValidity('用户名不能包含空格')
+        usernameInvalid.innerHTML = '用户名不能包含空格'
         return false
     } else {
         username.setCustomValidity('')
@@ -16,9 +25,9 @@ function checkUsername() {
 }
 
 function checkPassword() {
-    if (password.value.length < 3 || password.value.length > 18) {
-        password.setCustomValidity('Password must be at least 8 characters long')
-        passwordInvalid.innerHTML = 'Password must be at least 8 characters long'
+    if (password.value.length < 6 || password.value.length > 16) {
+        password.setCustomValidity('密码长度必须在6到16个字符之间')
+        passwordInvalid.innerHTML = '密码长度必须在6到16个字符之间'
         return false
     } else {
         password.setCustomValidity('')
