@@ -34,7 +34,7 @@ def index():
         return redirect(url_for("login"))
     tablename = "student_info"
     sql = (
-        "SELECT s.*,  p.stu_profession FROM student_info s INNER JOIN stu_profession p "
+        "SELECT s.stu_id,s.stu_name,s.stu_sex,s.stu_age,s.stu_origin,p.stu_profession FROM student_info s INNER JOIN stu_profession p "
         "on s.stu_profession_id=p.stu_profession_id"
     )
     strWhere = []
@@ -51,7 +51,10 @@ def index():
         print(sql)
     result = dbf.do(sql)
     # result=result[:len(result)-2]
-    return render_template("show1.html", datas=result, fields=dbf.get_fields(tablename))
+    fields = dbf.get_fields(tablename)
+    fields=fields[:len(fields)-1]
+    fields.append("专业")
+    return render_template("show1.html", datas=result, fields=fields)
 
 
 @app.route("/add", methods=["GET", "post"])
