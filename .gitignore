@@ -1,3 +1,7 @@
-.__pycache__
-.vacode
-.idea
+# 忽略缓存文件
+__pycache__/
+*.py[cod]
+
+# 忽略配置文件
+.vscode/
+.idea/
