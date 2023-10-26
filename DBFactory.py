@@ -63,11 +63,10 @@ class DBFactory:
         id_field_name = list(data)[0]
         for key in list(data)[1:]:
             values.append(f"{key}='{data[key]}'")
-        sql = f"update {table_name} set {','.join(values)} where {id_field_name}='{data[id_field_name]}'"
+        sql = f"update {table_name} set {','.join(values)} where {id_field_name}=?"
         print(sql)
         print(data[id_field_name])
-        self.do(sql)
-        print(sql)
+        self.do(sql,data[id_field_name])
         self.conn.commit()
 
     def insert(self, data: dict, table_name):
@@ -83,7 +82,7 @@ class DBFactory:
     def delete_by_id(self, id_field_name, value, table_name):
         sql = f"delete from {table_name} where {id_field_name}=?"
         # print (sql)
-        self.cur.execute(sql, (value,))
+        self.cur.execute(sql, value)
         self.conn.commit()
 
 # def init_db(dbname="./db/student_083_2.db"):

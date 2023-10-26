@@ -63,7 +63,7 @@ def add():
         return redirect(url_for("login"))
 
     if request.method == "GET":
-        datas = dbf.do("select * from stu_profession")
+        datas = dbf.all("stu_profession")
         return render_template("add.html", datas=datas)
 
     else:
@@ -75,6 +75,8 @@ def add():
             stu_origin=request.form["stu_origin"],
             stu_profession_id=request.form["stu_profession"],
         )
+        if(len(dbf.do("select * from student_info where stu_id='%s'" % data["stu_id"]))>0):
+            return '<script>alert("学号已存在!");window.open("/add");</script>'
         dbf.insert(data, "student_info")
         return redirect(url_for("index"))
 
