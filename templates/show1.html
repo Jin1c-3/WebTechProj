@@ -9,31 +9,51 @@
 </head>
 <body>
 <div class="container">
-    <form>
-        姓名：<input type="text" name="name">
-        学号：<input type="text" name="stuno">
-        <input type="submit" value="查询" class="btn btn-primary btn-sm">
-    </form>
-    <div class="row text-center"><a href="/add">add</a></div>
+    <div class="row mt-5 mb-3">
+        <div class="col">
+            <form>
+                <div class="row ">
+                    <div class="col-5">
+                        <input type="text" name="name" class="form-control" placeholder="姓名">
+                    </div>
+                    <div class="col-5">
+                        <input type="text" name="stuno" class="form-control" placeholder="学号">
+                    </div>
+                    <div class="col-2 d-flex justify-content-center align-items-center">
+                        <button type="submit" value="查询" class="btn btn-primary  w-100">搜索</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col">
+            <a class="btn btn-outline-primary w-25" href="/add">添加</a>
+        </div>
+    </div>
+
+
     <div class="row">
-        <table border="1" class="table">
+        <table class="table table-hover  text-center">
+            <thead>
             <tr>
                 {% for a in fields %}
-                <td>{{a}}</td>
+                    <th>{{ a }}</th>
                 {% endfor %}
-                <td>修改</td>
-                <td>删除</td>
+                <th colspan="2">功能</th>
             </tr>
-            {%for item in datas%}
-            <tr>
-                {%for a in item%}
-                <td>{{a}}</td>
-                {% endfor %}
-                <td><a href="update?id={{item[0]}}">修改</a></td>
-                <!--                <td><a href="del?stuid={{item[0]}}">删除</a></td>-->
-                <td><a href="del2/{{item[0]}}">删除</a></td>
-            </tr>
+            </thead>
+            <tbody>
+            {% for item in datas %}
+                <tr>
+                    {% for a in item %}
+                        <td>{{ a }}</td>
+                    {% endfor %}
+
+                    <td><a class="btn btn-outline-primary btn-sm w-100" href="/update?id={{ item[0] }}">修改</a></td>
+                    <td><a class="btn btn btn-outline-danger btn-sm w-100" href="/del2/{{ item[0] }}">删除</a></td>
+                </tr>
             {% endfor %}
+            </tbody>
+
         </table>
     </div>
 </div>

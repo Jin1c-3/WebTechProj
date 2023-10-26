@@ -20,7 +20,7 @@ def login():
         return render_template("login.html")
     if 1 == 1:
         if dbf.validate_username_password(
-            request.form["username"], request.form["password"]
+                request.form["username"], request.form["password"]
         ):
             session["userid"] = request.form["username"]
             return redirect(url_for("index"))
@@ -49,8 +49,9 @@ def index():
     if len(strWhere) > 0:
         sql = sql + " where " + " and ".join(strWhere)
         print(sql)
-    result, fields = dbf.do(sql)
-    return render_template("show1.html", datas=result, fields=fields)
+    result = dbf.do(sql)
+    # result=result[:len(result)-2]
+    return render_template("show1.html", datas=result, fields=dbf.get_fields(tablename))
 
 
 @app.route("/add", methods=["GET", "post"])
@@ -59,7 +60,7 @@ def add():
         return redirect(url_for("login"))
 
     if request.method == "GET":
-        datas, _ = dbf.do("select * from stu_profession")
+        datas = dbf.do("select * from stu_profession")
         return render_template("add.html", datas=datas)
 
     else:
