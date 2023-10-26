@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>修改记录</title>
+    <link href="/static/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/static/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="col-sm-6 col-sm-offset-4">
+        <h3>请输入要更新记录的相关信息</h3>
+        <form id="form1" name="form1" method="post" action="/update">
+           <label>学号：{{data[0]}}</label>
+            <input type="hidden" name="stu_id" value='{{data[0]}}'/>
+            <p>
+                <label>姓名： </label>
+                <input type="text" name="stu_name" value='{{data[1]}}'/>
+
+            </p>
+            <p>
+                <label>性别：</label>
+                {% if data[2]=="男" %}
+
+                <input name="stu_sex" type="radio" value="男" checked="checked"/>
+                男
+
+                <input type="radio" name="stu_sex" value="女"/>
+                女
+                {%else%}
+
+                <input name="stu_sex" type="radio" value="男"/>
+                男
+
+                <input type="radio" name="stu_sex" value="女" checked="checked"/>
+                女
+                {%endif%}
+                <br/>
+            </p>
+            <p>
+                <label>年龄： </label>
+                <input type="text" name="stu_age" value='{{data[3]}}'/>
+
+            </p>
+            <p>
+                <label>籍贯：</label>
+                <input type="text" name="stu_origin" value='{{data[4]}}'/>
+
+            </p>
+            <p>
+                <label>专业：</label>
+
+<!--                <select name="stu_profession">-->
+<!--                    <option value='{{data[5]}}'>{{data[6]}}</option>-->
+<!--                    {% for pro in datas -%}-->
+<!--                    <option value='{{pro[0]}}'>{{pro[1]}}</option>-->
+<!--                    {%endfor-%}-->
+<!--                </select>-->
+                <select name="stu_profession">
+
+                    {% for pro in datas -%}
+                    <option value='{{pro[0]}}' {{'selected' if pro[0]==data[5] }}>{{pro[1]}}</option>
+                    {%endfor-%}
+                </select>
+
+            </p>
+            <p>
+
+                <input type="submit" name="button" value="提交"/>
+
+                <input type="reset" name="button2" value="重置"/>
+
+                <br/>
+            </p>
+        </form>
+    </div>
+</div>
+</body>
+</html>

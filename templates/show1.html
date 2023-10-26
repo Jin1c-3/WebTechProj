@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>数据显示</title>
+    <!-- Bootstrap -->
+    <link href="/static/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/static/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <form>
+        姓名：<input type="text" name="name">
+        学号：<input type="text" name="stuno">
+        <input type="submit" value="查询" class="btn btn-primary btn-sm">
+    </form>
+    <div class="row text-center"><a href="/add">add</a></div>
+    <div class="row">
+        <table border="1" class="table">
+            <tr>
+                {% for a in fields %}
+                <td>{{a}}</td>
+                {% endfor %}
+                <td>修改</td>
+                <td>删除</td>
+            </tr>
+            {%for item in datas%}
+            <tr>
+                {%for a in item%}
+                <td>{{a}}</td>
+                {% endfor %}
+                <td><a href="update?id={{item[0]}}">修改</a></td>
+                <!--                <td><a href="del?stuid={{item[0]}}">删除</a></td>-->
+                <td><a href="del2/{{item[0]}}">删除</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+</body>
+</html>
