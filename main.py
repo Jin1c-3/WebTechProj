@@ -49,26 +49,67 @@ def login():
 #     return render_template("login.html")
 
 
-@app.route("/", methods=["GET"])
+@app.get("/")
 def index():
-    if not CheckLogin():
-        return redirect(url_for("login"))
+    """
+    order_flag     1的时候表示正在排序。下面的值1表示正排，-1表示负排
+    search_flag    1的时候表示搜索。
+    page_size      每一页最多多少内容
+    current_page   当前页码
+    stu_id
+    stu_name
+    stu_sex
+    stu_age
+    stu_origin
+    stu_profession
+    """
     tablename = "student_info"
+    where_str = []
+    order_str = []
     sql = (
         "SELECT s.stu_id,s.stu_name,s.stu_sex,s.stu_age,s.stu_origin,p.stu_profession FROM student_info s INNER JOIN stu_profession p "
         "on s.stu_profession_id=p.stu_profession_id"
     )
-    strWhere = []
-    if "name" in request.args:
-        name = request.args["name"]
-        if name != "":
-            strWhere.append("stu_name like '%%%s%%'" % name)
-    if "stuno" in request.args:
-        stuno = request.args["stuno"]
-        if stuno != "":
-            strWhere.append("stu_id = '%s'" % stuno)
-    if len(strWhere) > 0:
-        sql = sql + " where " + " and ".join(strWhere)
+    if not CheckLogin():
+        return redirect(url_for("login"))
+    if "order_flag" in request.args:
+        order_flag = request.args["order_flag"]
+        if order_flag == "1" or order_flag == 1 or order_flag == True:
+            for key in request.args:
+                # 跳过搜索flag
+                if key == "search_flag":
+                    continue
+                if request.args[key] == 1 or request.args[key] == "1":
+                    order_str.append(f"{key} asc")
+                    continue
+                if request.args[key] == -1 or request.args[key] == "-1":
+                    order_str.append(f"{key} desc")
+                    continue
+
+    if "search_flag" in request.args:
+        search_flag = request.args["search_flag"]
+        if search_flag == "1" or search_flag == 1 or search_flag == True:
+            for key in request.args:
+                # 跳过排序flag
+                if key == "order_flag":
+                    continue
+                if request.args[key] != None and request.args[key] != "":
+                    where_str.append(f"{key} like %{request.args[key]}%")
+                    continue
+
+    # if "name" in request.args:
+    #     name = request.args["name"]
+    #     if name != "":
+    #         where_str.append("stu_name like '%%%s%%'" % name)
+    # if "stuno" in request.args:
+    #     stuno = request.args["stuno"]
+    #     if stuno != "":
+    #         where_str.append("stu_id = '%s'" % stuno)
+    if len(where_str) > 0:
+        sql = sql + " where " + " and ".join(where_str)
+        print(sql)
+    if len(order_str) > 0:
+        sql = sql + " order by " + ",".join(order_str)
         print(sql)
     result = dbf.do(sql)
     # result=result[:len(result)-2]
@@ -76,6 +117,22 @@ def index():
     fields = fields[: len(fields) - 1]
     fields.append("专业")
     return render_template("show1.html", datas=result, fields=fields)
+
+
+@app.post("/")
+def index2():
+    if not CheckLogin():
+        return redirect(url_for("login"))
+    order_flag = request.form["order_flag"]  # 1的时候表示正在排序。下面的值1表示正排，-1表示负排
+    search_flag = request.form["search_flag"]  # 1的时候表示搜索。只搜索第一个有值的
+    page_size = int(request.form["page_size"])  # 每一页最多多少内容
+    current_page = int(request.form["current_page"])  # 当前页码
+    stu_id = request.form["stu_id"]
+    stu_name = request.form["stu_name"]
+    stu_sex = request.form["stu_sex"]
+    stu_age = request.form["stu_age"]
+    stu_origin = request.form["stu_origin"]
+    stu_profession = request.form["stu_profession"]
 
 
 @app.route("/add", methods=["GET", "post"])
