@@ -56,6 +56,7 @@ def index():
     # search_flag    1的时候表示搜索。
     page_size      每一页最多多少内容
     current_page   当前页码
+    total_size     总共多少条数据，用于页面计算有几页
     stu_id
     stu_name
     stu_sex
@@ -131,13 +132,16 @@ def index():
     #     sql = sql + " order by " + ",".join(order_str)
     #     print(sql)
     result = dbf.do(sql)
-    if len(result) > page_size:
+    total_size = len(result)
+    if total_size > page_size:
         result = result[(current_page - 1) * page_size : current_page * page_size]
 
     fields = dbf.get_fields(tablename)
     fields = fields[: len(fields) - 1]
     fields.append("专业")
-    return render_template("show1.html", datas=result, fields=fields)
+    return render_template(
+        "show1.html", datas=result, fields=fields, total_size=total_size
+    )
 
 
 @app.route("/add", methods=["GET", "post"])
