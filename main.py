@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, redirect, session
+from flask import Flask, flash, render_template, request, url_for, redirect, session
 
 from DBFactory import *
 
@@ -18,14 +18,14 @@ def CheckLogin():
 def login():
     if request.method == "GET":
         return render_template("login.html")
-    if 1 == 1:
-        if dbf.validate_username_password(
-                request.form["username"], request.form["password"]
-        ):
-            session["userid"] = request.form["username"]
-            return redirect(url_for("index"))
-        else:
-            return render_template("login.html")
+    if dbf.validate_username_password(
+        request.form["username"], request.form["password"]
+    ):
+        session["userid"] = request.form["username"]
+        return redirect(url_for("index"))
+    else:
+        flash("登陆失败！请检查用户名和密码", category="danger")
+        return render_template("login.html")
 
 
 @app.route("/", methods=["GET"])
@@ -52,7 +52,7 @@ def index():
     result = dbf.do(sql)
     # result=result[:len(result)-2]
     fields = dbf.get_fields(tablename)
-    fields=fields[:len(fields)-1]
+    fields = fields[: len(fields) - 1]
     fields.append("专业")
     return render_template("show1.html", datas=result, fields=fields)
 
@@ -75,9 +75,30 @@ def add():
             stu_origin=request.form["stu_origin"],
             stu_profession_id=request.form["stu_profession"],
         )
-        if(len(dbf.do("select * from student_info where stu_id='%s'" % data["stu_id"]))>0):
-            return '<script>alert("学号已存在!");window.open("/add");</script>'
+        if (
+            len(dbf.do("select * from student_info where stu_id='%s'" % data["stu_id"]))
+            > 0
+        ):
+            flash("添加失败！学号已存在", category="danger")
+            return redirect(url_for("add"))
         dbf.insert(data, "student_info")
+        flash("添加成功！", category="success")
+        return redirect(url_for("index"))
+
+
+@app.post("/multidel")
+def multidel():
+    if not CheckLogin():
+        return redirect(url_for("login"))
+    ids = request.form.getlist("ids")
+    print(ids)
+    try:
+        for id in ids:
+            dbf.delete_by_id("stu_id", id, "student_info")
+        flash("删除成功！", category="success")
+        return redirect(url_for("index"))
+    except:
+        flash("删除失败！", category="danger")
         return redirect(url_for("index"))
 
 
@@ -86,16 +107,26 @@ def delete():
     if not CheckLogin():
         return redirect(url_for("login"))
     id = request.args["stuid"]
-    dbf.delete_by_id("stu_id", id, "student_info")
-    return redirect(url_for("index"))
+    try:
+        dbf.delete_by_id("stu_id", id, "student_info")
+        flash("删除成功！", category="success")
+        return redirect(url_for("index"))
+    except:
+        flash("删除失败！", category="danger")
+        return redirect(url_for("index"))
 
 
 @app.route("/del2/<id>", methods=["GET"])
 def delete2(id):
     if not CheckLogin():
         return redirect(url_for("login"))
-    dbf.delete_by_id("stu_id", id, "student_info")
-    return redirect(url_for("index"))
+    try:
+        dbf.delete_by_id("stu_id", id, "student_info")
+        flash("删除成功！", category="success")
+        return redirect(url_for("index"))
+    except:
+        flash("删除失败！", category="danger")
+        return redirect(url_for("index"))
 
 
 @app.route("/update", methods=["GET", "post"])
@@ -124,7 +155,7 @@ def upadte():
             stu_profession_id=request.form["stu_profession"],
         )
         dbf.update(data, "student_info")
-
+        flash("修改成功！", category="success")
         return redirect(url_for("index"))
 
 

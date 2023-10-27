@@ -28,14 +28,14 @@ class DBFactory:
         len长度大于零就是对的
         """
         return (
-                len(
-                    self.do(
-                        "select * from users where username=? and pwd=?",
-                        username,
-                        password,
-                    )
+            len(
+                self.do(
+                    "select * from users where username=? and pwd=?",
+                    username,
+                    password,
                 )
-                > 0
+            )
+            > 0
         )
 
     def get_fields(self, table_name):
@@ -66,7 +66,7 @@ class DBFactory:
         sql = f"update {table_name} set {','.join(values)} where {id_field_name}=?"
         print(sql)
         print(data[id_field_name])
-        self.do(sql,data[id_field_name])
+        self.do(sql, data[id_field_name])
         self.conn.commit()
 
     def insert(self, data: dict, table_name):
@@ -79,11 +79,11 @@ class DBFactory:
         self.cur.execute(sql, values)
         self.conn.commit()
 
-    def delete_by_id(self, id_field_name, value, table_name):
+    def delete_by_id(self, id_field_name, value: str, table_name):
         sql = f"delete from {table_name} where {id_field_name}=?"
-        # print (sql)
-        self.cur.execute(sql, value)
+        self.cur.execute(sql, (value,))
         self.conn.commit()
+
 
 # def init_db(dbname="./db/student_083_2.db"):
 #     conn = sqlite3.connect(dbname)

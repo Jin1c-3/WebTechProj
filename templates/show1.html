@@ -1,61 +1,130 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>数据显示</title>
     <!-- Bootstrap -->
-    <link href="/static/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link
+      href="/static/bootstrap/5.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
     <script src="/static/bootstrap/5.3.0/js/bootstrap.min.js"></script>
-</head>
-<body>
-<div class="container">
-    <div class="row mt-5 mb-3">
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4">
+          {% for message in get_flashed_messages(with_categories=True) %}
+          <div
+            class="alert alert-{{ message[0] }} alert-dismissible fade show"
+            role="alert"
+          >
+            {{ message[1] }}
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+            ></button>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="row mt-5 mb-3">
         <div class="col">
-            <form>
-                <div class="row ">
-                    <div class="col-5">
-                        <input type="text" name="name" class="form-control" placeholder="姓名">
-                    </div>
-                    <div class="col-5">
-                        <input type="text" name="stuno" class="form-control" placeholder="学号">
-                    </div>
-                    <div class="col-2 d-flex justify-content-center align-items-center">
-                        <button type="submit" value="查询" class="btn btn-primary  w-100">搜索</button>
-                    </div>
-                </div>
-            </form>
+          <form>
+            <div class="row">
+              <div class="col-5">
+                <input
+                  type="text"
+                  name="name"
+                  class="form-control"
+                  placeholder="姓名"
+                />
+              </div>
+              <div class="col-5">
+                <input
+                  type="text"
+                  name="stuno"
+                  class="form-control"
+                  placeholder="学号"
+                />
+              </div>
+              <div
+                class="col-2 d-flex justify-content-center align-items-center"
+              >
+                <button
+                  type="submit"
+                  value="查询"
+                  class="btn btn-primary w-100"
+                >
+                  搜索
+                </button>
+              </div>
+            </div>
+          </form>
         </div>
         <div class="col">
-            <a class="btn btn-outline-primary w-25" href="/add">添加</a>
+          <a class="btn btn-outline-primary w-25" href="/add">添加</a>
         </div>
-    </div>
+      </div>
 
-
-    <div class="row">
-        <table class="table table-hover  text-center">
-            <thead>
+      <div class="row">
+        <table class="table table-hover text-center">
+          <thead>
             <tr>
-                {% for a in fields %}
-                    <th>{{ a }}</th>
-                {% endfor %}
-                <th colspan="2">功能</th>
+              <th>
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value="all"
+                  id="allradio"
+                />（全选/全不选）
+              </th>
+              {% for a in fields %}
+              <th>{{ a }}</th>
+              {% endfor %}
+              <th colspan="2">功能</th>
             </tr>
-            </thead>
-            <tbody>
+          </thead>
+          <tbody>
             {% for item in datas %}
-                <tr>
-                    {% for a in item %}
-                        <td>{{ a }}</td>
-                    {% endfor %}
+            <tr>
+              <td>
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value="{{item.stu_id}}"
+                  id="{{item.stu_id}}"
+                />
+              </td>
+              {% for a in item %}
+              <td>{{ a }}</td>
+              {% endfor %}
 
-                    <td><a class="btn btn-outline-primary btn-sm w-100" href="/update?id={{ item[0] }}">修改</a></td>
-                    <td><a class="btn btn btn-outline-danger btn-sm w-100" href="/del2/{{ item[0] }}">删除</a></td>
-                </tr>
+              <td>
+                <a
+                  class="btn btn-outline-primary btn-sm w-100"
+                  href="/update?id={{ item[0] }}"
+                  >修改</a
+                >
+              </td>
+              <td>
+                <a
+                  class="btn btn btn-outline-danger btn-sm w-100"
+                  href="/del2/{{ item[0] }}"
+                  >删除</a
+                >
+              </td>
+            </tr>
             {% endfor %}
-            </tbody>
-
+          </tbody>
         </table>
+        <div class="col-2">
+          <a class="btn btn-outline-danger w-100" href="#">删除</a>
+        </div>
+      </div>
     </div>
-</div>
-</body>
+  </body>
 </html>
