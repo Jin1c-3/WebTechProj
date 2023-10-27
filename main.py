@@ -25,17 +25,18 @@ def login():
         flash("登录成功", category="success")
         return redirect(url_for("index"))
     # 开始注册
-    username=request.form["username"]
-    password=request.form["password"]
-    if(len(dbf.do('select * from users where username=?',username))>0):
+    username = request.form["username"]
+    password = request.form["password"]
+    if len(dbf.do("select * from users where username=?", username)) > 0:
         flash("用户名已存在", category="danger")
         return render_template("login.html")
-    dbf.register(username,password)
+    dbf.register(username, password)
     flash("注册成功！请点击登录", category="success")
-    return render_template("login.html"username=username)
+    return render_template("login.html", username=username)
     # flash("登陆失败！请检查用户名和密码", category="danger")
     # return render_template("login.html")
-    
+
+
 # @app.post("/register")
 # def register():
 #     username=request.form["username"]
@@ -46,6 +47,7 @@ def login():
 #     dbf.register(username,password)
 #     flash("注册成功！请点击登录", category="success")
 #     return render_template("login.html")
+
 
 @app.route("/", methods=["GET"])
 def index():
