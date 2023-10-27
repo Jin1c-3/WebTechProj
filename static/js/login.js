@@ -1,47 +1,51 @@
 const form = document.querySelector('.needs-validation')
-const username = document.querySelector('#username')
-const password = document.querySelector('#pwd')
-const usernameInvalid = document.querySelector('.username-invalid')
-const passwordInvalid = document.querySelector('.pwd-invalid')
+const in_ = document.querySelector('#in')
 
-function checkUsername() {
-    const reg1 = /^[a-zA-Z0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]{6,16}$/;
-    if (username.value.length < 3 || username.value.length > 18) {
-        username.setCustomValidity('用户名长度必须在4到18个字符之间')
-        usernameInvalid.innerHTML = '用户名长度必须在4到18个字符之间'
+const inInvalid = document.querySelector('.in-invalid')
+let code; //在全局定义验证码
+
+function createCode() {
+    code = "";
+    let codeLength = 4;//验证码的长度
+    let checkCode = document.getElementById("code");
+    let random = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
+        'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];//随机数
+    for (let i = 0; i < codeLength; i++) {//循环操作
+        let index = Math.floor(Math.random() * 36);//取得随机数的索引（0~35）
+        code += random[index];//根据索引取得随机数加到code上
+    }
+    checkCode.value = code;//把code值赋给验证码
+}
+
+function check_in() {
+    console.log('check_in')
+    let inputCode = in_.value.toUpperCase(); //取得输入的验证码并转化为大写
+    if (inputCode.length <= 0) { //若输入的验证码长度为0
+        in_.setCustomValidity('请输入验证码！') //则弹出请输入验证码
+        inInvalid.innerHTML = '请输入验证码！'
         return false
-    } else if ( !reg1.test(username.value) ) {
-        username.setCustomValidity('用户名只能包含字母、数字和特殊字符')
-        usernameInvalid.innerHTML = '用户名只能包含字母、数字和特殊字符'
-        return false
-    } else if (username.value.indexOf(" ") !== -1) {
-        username.setCustomValidity('用户名不能包含空格')
-        usernameInvalid.innerHTML = '用户名不能包含空格'
-        return false
-    } else {
-        username.setCustomValidity('')
+    } else if (inputCode !== code) { //若输入的验证码与产生的验证码不一致时
+        in_.setCustomValidity('验证码输入错误！') //则弹出验证码输入错误
+        inInvalid.innerHTML = '验证码输入错误！'
+        createCode();//刷新验证码
+    } else { //输入正确时
+        in_.setCustomValidity('')
         return true
     }
 }
 
-function checkPassword() {
-    if (password.value.length < 6 || password.value.length > 16) {
-        password.setCustomValidity('密码长度必须在6到16个字符之间')
-        passwordInvalid.innerHTML = '密码长度必须在6到16个字符之间'
-        return false
-    } else {
-        password.setCustomValidity('')
-        return true
-    }
-}
 
 form.addEventListener('submit', (event) => {
-    let count = 0
-    count += checkUsername() ? 1 : 0
-    count += checkPassword() ? 1 : 0
-    if (count < 2) {
-        event.preventDefault()
-        event.stopPropagation()
+
+    console.log('submit')
+    event.preventDefault()
+    event.stopPropagation()
+    if (!check_in()) {
+
     }
     form.classList.add('was-validated')
+})
+
+window.addEventListener('load', () => {
+    createCode();
 })
