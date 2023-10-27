@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 import sqlite3
+import hmac
+import hashlib
+import pickle
 
 
 class DBFactory:
@@ -22,17 +25,22 @@ class DBFactory:
         self.cur.execute(sql, value)
         self.conn.commit()
         return self.cur.fetchall()
+    
+    def register(self, username, password):
+        encrytor=hmac.new(bytes(username,encoding='utf-8'),pickle.dumps(password),hashlib.sha256)
+        self.insert({"username": username, "pwd": encrytor.hexdigest()}, "users")
 
     def validate_username_password(self, username, password):
         """
         len长度大于零就是对的
         """
+        encrytor=hmac.new(bytes(username,encoding='utf-8'),pickle.dumps(password),hashlib.sha256)
         return (
             len(
                 self.do(
                     "select * from users where username=? and pwd=?",
                     username,
-                    password,
+                    encrytor.hexdigest(),
                 )
             )
             > 0
@@ -75,7 +83,6 @@ class DBFactory:
         for key in keys:
             values.append(data[key])
         sql = f"insert into {table_name} ({','.join(keys)}) values ({','.join(['?'] * len(keys))})"
-        # print(sql)
         self.cur.execute(sql, values)
         self.conn.commit()
 
