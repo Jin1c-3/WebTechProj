@@ -1,5 +1,6 @@
 const form = document.querySelector('.needs-validation')
 const in_ = document.querySelector('#in')
+const messages = document.querySelectorAll('.messages')
 
 const inInvalid = document.querySelector('.in-invalid')
 let code; //在全局定义验证码
@@ -18,7 +19,6 @@ function createCode() {
 }
 
 function check_in() {
-    console.log('check_in')
     let inputCode = in_.value.toUpperCase(); //取得输入的验证码并转化为大写
     if (inputCode.length <= 0) { //若输入的验证码长度为0
         in_.setCustomValidity('请输入验证码！') //则弹出请输入验证码
@@ -36,12 +36,9 @@ function check_in() {
 
 
 form.addEventListener('submit', (event) => {
-
-    console.log('submit')
-    event.preventDefault()
-    event.stopPropagation()
     if (!check_in()) {
-
+        event.preventDefault()
+        event.stopPropagation()
     }
     form.classList.add('was-validated')
 })
@@ -49,3 +46,10 @@ form.addEventListener('submit', (event) => {
 window.addEventListener('load', () => {
     createCode();
 })
+
+window.setTimeout(() => {
+    messages.forEach((message) => {
+        let btn = message.querySelector('button')
+        btn.click()
+    })
+}, 3000)

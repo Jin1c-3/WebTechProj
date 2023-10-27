@@ -1,3 +1,5 @@
+import math
+
 from flask import Flask, flash, render_template, request, url_for, redirect, session
 
 from DBFactory import *
@@ -19,7 +21,7 @@ def login():
     if request.method == "GET":
         return render_template("login.html")
     if dbf.validate_username_password(
-        request.form["username"], request.form["password"]
+            request.form["username"], request.form["password"]
     ):
         session["userid"] = request.form["username"]
         flash("登录成功", category="success")
@@ -75,19 +77,27 @@ def index():
         "SELECT s.stu_id,s.stu_name,s.stu_sex,s.stu_age,s.stu_origin,p.stu_profession FROM student_info s INNER JOIN stu_profession p "
         "on s.stu_profession_id=p.stu_profession_id"
     )
-
+    for key in request.args:
+        print(key, request.args[key])
+    for key in request.form:
+        print(key, request.form[key])
     # 默认值
     page_size = 10
     current_page = 1
     if "page_size" in request.args:
-        page_size = request.args["page_size"]
-        if page_size != "" and page_size != None:
+        if not (request.args["page_size"] == "" or request.args["page_size"] is None or request.args[
+            "page_size"] == " "):
+            page_size = request.args["page_size"]
             page_size = int(page_size)
+            print(f'page_size真实值{page_size}')
     if "current_page" in request.args:
-        current_page = request.args["current_page"]
-        if current_page != "" and current_page != None:
+        if not (request.args["current_page"] == "" or request.args["current_page"] is None or request.args[
+            "current_page"] == " "):
+            current_page = request.args["current_page"]
+            print(f'-----current_page {current_page}')
             current_page = int(current_page)
 
+    # print(f'current_page{current_page}')
     # if "order_flag" in request.args:
     #     order_flag = request.args["order_flag"]
     #     if order_flag == "1" or order_flag == 1 or order_flag == True:
@@ -113,9 +123,10 @@ def index():
     #                 where_str.append(f"{key} like %{request.args[key]}%")
     #                 continue
     for key in request.args:
+        if key == 'page_size' or key == 'current_page':
+            continue
         if request.args[key] != None and request.args[key] != "":
             where_str.append(f"{key} like '%{request.args[key]}%'")
-            continue
 
     # if "name" in request.args:
     #     name = request.args["name"]
@@ -127,20 +138,35 @@ def index():
     #         where_str.append("stu_id = '%s'" % stuno)
     if len(where_str) > 0:
         sql = sql + " where " + " and ".join(where_str)
-        print(sql)
+        # print(sql)
     # if len(order_str) > 0:
     #     sql = sql + " order by " + ",".join(order_str)
     #     print(sql)
     result = dbf.do(sql)
     total_size = len(result)
+    # print(f'current_page{current_page}类型{type(current_page)}')
+    current_page = int(current_page)
     if total_size > page_size:
-        result = result[(current_page - 1) * page_size : current_page * page_size]
+        print(f'(current_page - 1) * page_size{(current_page - 1) * page_size}')
+        print(f'current_page * page_size{current_page * page_size}')
+        result = result[(current_page - 1) * page_size: current_page * page_size]
+
+    print(f'page_size {page_size}')
+    print(f'current_page {current_page}')
+
+    for r in result[(current_page - 1) * page_size: current_page * page_size]:
+        print(r)
 
     fields = dbf.get_fields(tablename)
     fields = fields[: len(fields) - 1]
     fields.append("专业")
+    # if total_size % page_size:
+    #     total_page = total_size / page_size + 1
+    # else:
+    #     total_page = total_size / page_size
     return render_template(
-        "show1.html", datas=result, fields=fields, total_size=total_size
+        "show1.html", datas=result, fields=fields, total_page=math.ceil(total_size / page_size), page_size=page_size,
+        current_page=current_page
     )
 
 
@@ -163,8 +189,8 @@ def add():
             stu_profession_id=request.form["stu_profession"],
         )
         if (
-            len(dbf.do("select * from student_info where stu_id='%s'" % data["stu_id"]))
-            > 0
+                len(dbf.do("select * from student_info where stu_id='%s'" % data["stu_id"]))
+                > 0
         ):
             flash("添加失败！学号已存在", category="danger")
             return redirect(url_for("add"))

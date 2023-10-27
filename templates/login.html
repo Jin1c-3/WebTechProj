@@ -20,6 +20,23 @@
 
 <body>
 <div class="container">
+    <div class="messages">
+        {% for message in get_flashed_messages(with_categories=True) %}
+            <div
+                    class="alert alert-{{ message[0] }} alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3 w-25 "
+                    role="alert"
+                    style="z-index: 2000"
+            >
+                {{ message[1] }}
+                <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close"
+                ></button>
+            </div>
+        {% endfor %}
+    </div>
     <div class="row">
         <div class="col-sm-4"></div>
         <div class="col-sm-4">
@@ -33,7 +50,7 @@
                         </div>
                         <div class="mb-3 mt-3">
                             <label for="password" class="form-label">密码:</label>
-                            <input name="password" id="pwd" type="password" class="form-control" required/>
+                            <input name="password" id="password" type="password" class="form-control" required/>
                         </div>
                         <div class="mb-3 mt-3">
                             <label for="in" class="form-label">验证码:</label>

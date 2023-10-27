@@ -1,148 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
+<head>
+    <meta charset="UTF-8"/>
     <title>数据显示</title>
     <!-- Bootstrap -->
     <link
-      href="/static/bootstrap/5.3.0/css/bootstrap.min.css"
-      rel="stylesheet"
+            href="/static/bootstrap/5.3.0/css/bootstrap.min.css"
+            rel="stylesheet"
     />
     <script src="/static/bootstrap/5.3.0/js/bootstrap.min.js"></script>
-  </head>
-  <body>
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-4"></div>
-        <div class="col-sm-4">
-          {% for message in get_flashed_messages(with_categories=True) %}
-          <div
-            class="alert alert-{{ message[0] }} alert-dismissible fade show"
-            role="alert"
-          >
-            {{ message[1] }}
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="alert"
-              aria-label="Close"
-            ></button>
-          </div>
-          {% endfor %}
-        </div>
-      </div>
-      <div class="row mt-5 mb-3">
-        <div class="col">
-          <form>
-            <div class="row">
-              <div class="col-5">
-                <input
-                  type="text"
-                  name="stu_name"
-                  class="form-control"
-                  placeholder="姓名"
-                />
-              </div>
-              <div class="col-5">
-                <input
-                  type="text"
-                  name="stu_id"
-                  class="form-control"
-                  placeholder="学号"
-                />
-              </div>
-              <div
-                class="col-2 d-flex justify-content-center align-items-center"
-              >
-                <button
-                  type="submit"
-                  value="查询"
-                  class="btn btn-primary w-100"
+</head>
+<body>
+<div class="container">
+    <form>
+        <div class="messages">
+            {% for message in get_flashed_messages(with_categories=True) %}
+                <div
+                        class="alert alert-{{ message[0] }} alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3 w-25"
+                        role="alert"
                 >
-                  搜索
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div class="col">
-          <a class="btn btn-outline-primary w-25" href="/add">添加</a>
-        </div>
-      </div>
-
-      <div class="row">
-        <table class="table table-hover text-center">
-          <thead>
-            <tr>
-              <th>
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  value="all"
-                  id="allradio"
-                />（全选/全不选）
-              </th>
-              {% for a in fields %}
-              <th>{{ a }}</th>
-              {% endfor %}
-              <th colspan="2">功能</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for item in datas %}
-            <tr>
-              <td>
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  value="{{item.stu_id}}"
-                  id="{{item.stu_id}}"
-                />
-              </td>
-              {% for a in item %}
-              <td>{{ a }}</td>
-              {% endfor %}
-
-              <td>
-                <a
-                  class="btn btn-outline-primary btn-sm w-100"
-                  href="/update?id={{ item[0] }}"
-                  >修改</a
-                >
-              </td>
-              <td>
-                <a
-                  class="btn btn btn-outline-danger btn-sm w-100"
-                  href="/del2/{{ item[0] }}"
-                  >删除</a
-                >
-              </td>
-            </tr>
+                    {{ message[1] }}
+                    <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert"
+                            aria-label="Close"
+                    ></button>
+                </div>
             {% endfor %}
-          </tbody>
-        </table>
-        <div class="col-2">
-          <button type="button" class="btn btn-outline-danger w-100">
-            删除
-          </button>
         </div>
-      </div>
-      <div class="row">
-        <nav aria-label="Page navigation example">
-          <ul class="pagination pagination-lg justify-content-center">
-            <li class="page-item">
-              <a class="page-link" href="#">上一页</a>
-            </li>
-            <!-- 使用模板变量total_size/page_size来控制，page_size不是模板变量 -->
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-              <a class="page-link" href="#">下一页</a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </div>
-  </body>
+        <div class="row mt-3 mb-2">
+            <ul class="nav justify-content-end">
+                <li class="nav-item">
+                    <a class="nav-link" href="/login">登录/注销</a>
+                </li>
+            </ul>
+        </div>
+        <div class="row mt-1 mb-3">
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-5">
+                        <input
+                                type="text"
+                                name="stu_name"
+                                class="form-control"
+                                placeholder="姓名"
+                        />
+                    </div>
+                    <div class="col-5">
+                        <input
+                                type="text"
+                                name="stu_id"
+                                class="form-control"
+                                placeholder="学号"
+                        />
+                    </div>
+                    <div
+                            class="col-2 d-flex justify-content-center align-items-center"
+                    >
+                        <button
+                                value="查询"
+                                class="btn btn-primary w-100"
+                                onclick="All()"
+                        >
+                            搜索
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-1">
+                <a class="btn btn-outline-primary w-100" href="/add">添加</a>
+            </div>
+            <div class="col-1">
+                <a class="btn btn-outline-primary w-100" href="/del">删除</a>
+            </div>
+        </div>
+        <div class="row">
+            <table class="table table-hover text-center">
+                <thead>
+                <tr>
+                    <th>
+                        <input
+                                class="form-check-input"
+                                type="checkbox"
+                                value=""
+                                id="all-radios"
+                        />
+                    </th>
+                    {% for a in fields %}
+                        <th>{{ a }}</th>
+                    {% endfor %}
+                    <th colspan="2">功能</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in datas %}
+                    <tr>
+                        <td>
+                            <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="{{ item[0] }}"
+                                    id="{{ item[0] }}"
+                            />
+                        </td>
+                        {% for a in item %}
+                            <td>{{ a }}</td>
+                        {% endfor %}
+
+                        <td>
+                            <a
+                                    class="btn btn-outline-primary btn-sm w-100"
+                                    href="/update?id={{ item[0] }}"
+                            >修改</a
+                            >
+                        </td>
+                        <td>
+                            <a
+                                    class="btn btn btn-outline-danger btn-sm w-100"
+                                    href="/del2/{{ item[0] }}"
+                            >删除</a
+                            >
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-center">
+            <div>
+                <select class="form-select form-select-sm " aria-label=".form-select-sm example" name="page_size"
+                        id="page_size" onchange="All()">
+                    <option value="5" {% if page_size == 5 %}selected{% endif %}>5</option>
+                    <option value="10" {% if page_size == 10 %}selected{% endif %}>10</option>
+                    <option value="15" {% if page_size == 15 %}selected{% endif %}>15</option>
+                </select>
+            </div>
+            <div class="ms-1 me-3">
+                <label for="page-select">条/页</label>
+            </div>
+            <div>
+                <nav>
+                    <ul class="pagination pagination-sm ">
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Previous"
+                               data-page="{{ current_page - 1  if (current_page - 1) > 0 else 1 }}">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        {% for i in range(1,total_page + 1) %}
+                            <li class="page-item"><a class="page-link" href="#" data-page="{{ i }}">{{ i }}</a></li>
+                        {% endfor %}
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Next"
+                               data-page="{{ current_page + 1 if (current_page + 1) <= total_page else total_page }}">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <input
+                        class="form-control"
+                        type="hidden"
+                        name="current_page"
+                        id="current_page"
+                />
+            </div>
+        </div>
+    </form>
+</div>
+<script src="/static/js/show1.js"></script>
+</body>
 </html>
