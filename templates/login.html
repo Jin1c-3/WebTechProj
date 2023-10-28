@@ -1,81 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>登录</title>
-    <link href="/static/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link
+      href="/static/bootstrap/5.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
     <script src="/static/bootstrap/5.3.0/js/bootstrap.min.js"></script>
     <style>
-        #code {
-            font-family: Arial, 宋体, serif;
-            font-style: italic;
-            color: green;
-            border: 0;
-            letter-spacing: 3px;
-            font-weight: bolder;
-        }
+      #code {
+        font-family: Arial, 宋体, serif;
+        font-style: italic;
+        color: green;
+        border: 0;
+        letter-spacing: 3px;
+        font-weight: bolder;
+      }
     </style>
-</head>
+  </head>
 
-<body>
-<div class="container">
-    <div class="messages">
+  <body>
+    <div class="container">
+      <div class="messages">
         {% for message in get_flashed_messages(with_categories=True) %}
-            <div
-                    class="alert alert-{{ message[0] }} alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3 w-25 "
-                    role="alert"
-                    style="z-index: 2000"
-            >
-                {{ message[1] }}
-                <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="alert"
-                        aria-label="Close"
-                ></button>
-            </div>
+        <div
+          class="alert alert-{{ message[0] }} alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3 w-25 "
+          role="alert"
+          style="z-index: 2000"
+        >
+          {{ message[1] }}
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+            aria-label="Close"
+          ></button>
+        </div>
         {% endfor %}
-    </div>
-    <div class="row">
+      </div>
+      <div class="row">
         <div class="col-sm-4"></div>
         <div class="col-sm-4">
-            <div class="card mt-5 shadow">
-                <div class="card-header">登录</div>
-                <div class="card-body">
-                    <form action="/login" method="post" novalidate class="needs-validation">
-                        <div class="mb-3 mt-3">
-                            <label for="username" class="form-label">用户名:</label>
-                            <input name="username" type="text" id="username" class="form-control" required/>
-                        </div>
-                        <div class="mb-3 mt-3">
-                            <label for="password" class="form-label">密码:</label>
-                            <input name="password" id="password" type="password" class="form-control" required/>
-                        </div>
-                        <div class="mb-3 mt-3">
-                            <label for="in" class="form-label">验证码:</label>
-                            <div class="row">
-                                <div class="col-8">
-                                    <input name="in" id="in" type="text" class="form-control" required/>
-                                    <div class="invalid-feedback in-invalid">验证码错误</div>
-                                </div>
-                                <div class="col-4">
-                                    <input name="code" id="code" type="button" class="form-control"
-                                           onclick="createCode()" title="点击更换验证码"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-center">
-                            <button type="submit" class="btn btn-primary w-50 mb-3 mt-3">登录</button>
-                        </div>
-                    </form>
+          <div class="card mt-5 shadow">
+            <div class="card-header">登录</div>
+            <div class="card-body">
+              <form
+                action="/login"
+                method="post"
+                novalidate
+                class="needs-validation"
+              >
+                <div class="mb-3 mt-3">
+                  <label for="username" class="form-label">用户名:</label>
+                  <input
+                    name="username"
+                    type="text"
+                    id="username"
+                    class="form-control"
+                    required
+                  />{{ username | safe }}
                 </div>
+                <div class="mb-3 mt-3">
+                  <label for="password" class="form-label">密码:</label>
+                  <input
+                    name="password"
+                    id="password"
+                    type="password"
+                    class="form-control"
+                    required
+                  />
+                </div>
+                <div class="mb-3 mt-3">
+                  <label for="in" class="form-label">验证码:</label>
+                  <div class="row">
+                    <div class="col-8">
+                      <input
+                        name="in"
+                        id="in"
+                        type="text"
+                        class="form-control"
+                        required
+                      />
+                      <div class="invalid-feedback in-invalid">验证码错误</div>
+                    </div>
+                    <div class="col-4">
+                      <input
+                        name="code"
+                        id="code"
+                        type="button"
+                        class="form-control"
+                        onclick="createCode()"
+                        title="点击更换验证码"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                  <button type="submit" class="btn btn-primary w-50 mb-3 mt-3">
+                    登录
+                  </button>
+                </div>
+              </form>
             </div>
+          </div>
         </div>
         <div class="col-sm-4"></div>
+      </div>
     </div>
-</div>
-<script src="/static/js/login.js"></script>
-</body>
+    <script src="/static/js/login.js"></script>
+  </body>
 </html>
-
