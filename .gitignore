@@ -8,3 +8,6 @@ __pycache__/
 
 # 忽略Jin1c-3的百度云文件
 *.uploading.cfg
+
+# 忽略log文件
+*.log
