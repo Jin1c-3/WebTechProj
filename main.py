@@ -207,7 +207,7 @@ def upadte():
         id = request.args["id"]
         result = dbf.do(f"select * from student_info where stu_id={id}")
         datas = dbf.all("stu_profession")
-        return render_template("update.html", data=result, datas=datas)
+        return render_template("update.html", data=result[0], datas=datas)
     log.debug("request.form: %s", dict_str(request.form))
     data = dict(
         stu_id=request.form["stu_id"],
