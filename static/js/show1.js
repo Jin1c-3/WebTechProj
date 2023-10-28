@@ -1,14 +1,19 @@
 const messages = document.querySelectorAll('.messages')
 const allRadios = document.querySelector('#all-radios')
+const allRadiosValue = document.querySelector('#all-radios-value')
 const tbody = document.querySelector('tbody')
 const form = document.querySelector('form')
 const pageLinks = document.querySelectorAll('.page-link')
 const currentPage = document.querySelector('#current_page')
+
 const radios = tbody.querySelectorAll('.form-check-input')
 
 let value = {}
 
-function All() {
+function All(...args) {
+    if (args[0] === 'dels' && (allRadiosValue.value === '' || allRadiosValue.value === '{}')) {
+        return
+    }
     form.submit()
 }
 
@@ -28,7 +33,7 @@ allRadios.addEventListener('click', () => {
             delete value[radio.value]
         }
     })
-    allRadios.value = JSON.stringify(value)
+    allRadiosValue.value = JSON.stringify(value)
 })
 
 radios.forEach((radio) => {
@@ -46,8 +51,7 @@ radios.forEach((radio) => {
             delete value[radio.value]
             allRadios.checked = false
         }
-        allRadios.value = JSON.stringify(value)
-        console.log(allRadios.value)
+        allRadiosValue.value = JSON.stringify(value)
     })
 })
 

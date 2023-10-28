@@ -12,7 +12,7 @@
 </head>
 <body>
 <div class="container">
-    <form>
+    <form onsubmit="return false">
         <div class="messages">
             {% for message in get_flashed_messages(with_categories=True) %}
                 <div
@@ -72,7 +72,7 @@
                 <a class="btn btn-outline-primary w-100" href="/add">添加</a>
             </div>
             <div class="col-1">
-                <a class="btn btn-outline-primary w-100" href="/del">删除</a>
+                <button class="btn btn-outline-primary w-100" formaction="/del" onclick="All('dels')">删除</button>
             </div>
         </div>
         <div class="row">
@@ -87,6 +87,13 @@
                                 id="all-radios"
                                 name="all-radios"
                         />
+                        <input
+                                class="form-control"
+                                type="hidden"
+                                value=""
+                                id="all-radios-value"
+                                name="all-radios-value"
+                        >
                     </th>
                     {% for a in fields %}
                         <th>{{ a }}</th>
@@ -103,13 +110,11 @@
                                     type="checkbox"
                                     value="{{ item[0] }}"
                                     id="{{ item[0] }}"
-                                    name="{{ item[0] }}"
                             />
                         </td>
                         {% for a in item %}
                             <td>{{ a }}</td>
                         {% endfor %}
-
                         <td>
                             <a
                                     class="btn btn-outline-primary btn-sm w-100"
