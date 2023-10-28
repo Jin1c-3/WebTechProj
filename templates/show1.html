@@ -85,6 +85,7 @@
                                 type="checkbox"
                                 value=""
                                 id="all-radios"
+                                name="all-radios"
                         />
                     </th>
                     {% for a in fields %}
@@ -102,6 +103,7 @@
                                     type="checkbox"
                                     value="{{ item[0] }}"
                                     id="{{ item[0] }}"
+                                    name="{{ item[0] }}"
                             />
                         </td>
                         {% for a in item %}
@@ -136,9 +138,10 @@
                     <option value="15" {% if page_size == 15 %}selected{% endif %}>15</option>
                 </select>
             </div>
-            <div class="ms-1 me-3">
+            <div class="ms-2 me-3">
                 <label for="page-select">条/页</label>
             </div>
+
             <div>
                 <nav>
                     <ul class="pagination pagination-sm ">
@@ -165,6 +168,12 @@
                         name="current_page"
                         id="current_page"
                 />
+            </div>
+            <div class="ms-4 me-2">
+                <div class="border border-1">{{ current_page }} / {{ total_page }}</div>
+            </div>
+            <div class="ms-1 me-3">
+                <div>页</div>
             </div>
         </div>
     </form>
