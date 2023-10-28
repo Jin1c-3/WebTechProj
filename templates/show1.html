@@ -36,151 +36,155 @@
                 </li>
             </ul>
         </div>
-        <div class="row mt-1 mb-3">
-            <div class="col-6">
-                <div class="row">
-                    <div class="col-5">
-                        <input
-                                type="text"
-                                name="stu_name"
-                                class="form-control"
-                                placeholder="姓名"
-                        />
-                    </div>
-                    <div class="col-5">
-                        <input
-                                type="text"
-                                name="stu_id"
-                                class="form-control"
-                                placeholder="学号"
-                        />
-                    </div>
-                    <div
-                            class="col-2 d-flex justify-content-center align-items-center"
-                    >
-                        <button
-                                value="查询"
-                                class="btn btn-primary w-100"
-                                onclick="All()"
+        <div class="card shadow p-5">
+            <div class="row mt-1 mb-3">
+                <div class="col-6">
+                    <div class="row">
+                        <div class="col-5">
+                            <input
+                                    type="text"
+                                    name="stu_name"
+                                    class="form-control"
+                                    placeholder="姓名"
+                            />
+                        </div>
+                        <div class="col-5">
+                            <input
+                                    type="text"
+                                    name="stu_id"
+                                    class="form-control"
+                                    placeholder="学号"
+                            />
+                        </div>
+                        <div
+                                class="col-2 d-flex justify-content-center align-items-center"
                         >
-                            搜索
-                        </button>
+                            <button
+                                    value="查询"
+                                    class="btn btn-primary w-100"
+                                    onclick="All()"
+                            >
+                                搜索
+                            </button>
+                        </div>
                     </div>
                 </div>
+                <div class="col-1">
+                    <a class="btn btn-outline-primary w-100" href="/add">添加</a>
+                </div>
+                <div class="col-2">
+                    <button class="btn btn-outline-primary w-100" onclick="All('dels')">批量删除
+                    </button>
+                </div>
             </div>
-            <div class="col-1">
-                <a class="btn btn-outline-primary w-100" href="/add">添加</a>
-            </div>
-            <div class="col-1">
-                <button class="btn btn-outline-primary w-100" formaction="/del" onclick="All('dels')">删除</button>
-            </div>
-        </div>
-        <div class="row">
-            <table class="table table-hover text-center">
-                <thead>
-                <tr>
-                    <th>
-                        <input
-                                class="form-check-input"
-                                type="checkbox"
-                                value=""
-                                id="all-radios"
-                                name="all-radios"
-                        />
-                        <input
-                                class="form-control"
-                                type="hidden"
-                                value=""
-                                id="all-radios-value"
-                                name="all-radios-value"
-                        >
-                    </th>
-                    {% for a in fields %}
-                        <th>{{ a }}</th>
-                    {% endfor %}
-                    <th colspan="2">功能</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for item in datas %}
+            <div class="row">
+                <table class="table table-hover text-center">
+                    <thead>
                     <tr>
-                        <td>
+                        <th>
                             <input
                                     class="form-check-input"
                                     type="checkbox"
-                                    value="{{ item[0] }}"
-                                    id="{{ item[0] }}"
+                                    value=""
+                                    id="all-radios"
+                                    name="all-radios"
                             />
-                        </td>
-                        {% for a in item %}
-                            <td>{{ a }}</td>
+                            <input
+                                    class="form-control"
+                                    type="hidden"
+                                    value=""
+                                    id="all-radios-value"
+                                    name="all-radios-value"
+                            >
+                        </th>
+                        {% for a in fields %}
+                            <th>{{ a }}</th>
                         {% endfor %}
-                        <td>
-                            <a
-                                    class="btn btn-outline-primary btn-sm w-100"
-                                    href="/update?id={{ item[0] }}"
-                            >修改</a
-                            >
-                        </td>
-                        <td>
-                            <a
-                                    class="btn btn btn-outline-danger btn-sm w-100"
-                                    href="/del2/{{ item[0] }}"
-                            >删除</a
-                            >
-                        </td>
+                        <th colspan="2">功能</th>
                     </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="d-flex justify-content-center">
-            <div>
-                <select class="form-select form-select-sm " aria-label=".form-select-sm example" name="page_size"
-                        id="page_size" onchange="All()">
-                    <option value="5" {% if page_size == 5 %}selected{% endif %}>5</option>
-                    <option value="10" {% if page_size == 10 %}selected{% endif %}>10</option>
-                    <option value="15" {% if page_size == 15 %}selected{% endif %}>15</option>
-                </select>
+                    </thead>
+                    <tbody>
+                    {% for item in datas %}
+                        <tr>
+                            <td>
+                                <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value="{{ item[0] }}"
+                                        id="{{ item[0] }}"
+                                />
+                            </td>
+                            {% for a in item %}
+                                <td>{{ a }}</td>
+                            {% endfor %}
+                            <td>
+                                <a
+                                        class="btn btn-outline-primary btn-sm w-100"
+                                        href="/update?id={{ item[0] }}"
+                                >修改</a
+                                >
+                            </td>
+                            <td>
+                                <a
+                                        class="btn btn btn-outline-danger btn-sm w-100"
+                                        href="/del2/{{ item[0] }}"
+                                >删除</a
+                                >
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
             </div>
-            <div class="ms-2 me-3">
-                <label for="page-select">条/页</label>
-            </div>
+            <div class="d-flex justify-content-center">
+                <div>
+                    <select class="form-select form-select-sm " aria-label=".form-select-sm example" name="page_size"
+                            id="page_size" onchange="All()">
+                        <option value="5" {% if page_size == 5 %}selected{% endif %}>5</option>
+                        <option value="10" {% if page_size == 10 %}selected{% endif %}>10</option>
+                        <option value="15" {% if page_size == 15 %}selected{% endif %}>15</option>
+                    </select>
+                </div>
+                <div class="ms-2 me-3">
+                    <label for="page-select">条/页</label>
+                </div>
 
-            <div>
-                <nav>
-                    <ul class="pagination pagination-sm ">
-                        <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Previous"
-                               data-page="{{ current_page - 1  if (current_page - 1) > 0 else 1 }}">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
-                        </li>
-                        {% for i in range(1,total_page + 1) %}
-                            <li class="page-item"><a class="page-link" href="#" data-page="{{ i }}">{{ i }}</a></li>
-                        {% endfor %}
-                        <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Next"
-                               data-page="{{ current_page + 1 if (current_page + 1) <= total_page else total_page }}">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-                <input
-                        class="form-control"
-                        type="hidden"
-                        name="current_page"
-                        id="current_page"
-                />
-            </div>
-            <div class="ms-4 me-2">
-                <div class="border border-1">{{ current_page }} / {{ total_page }}</div>
-            </div>
-            <div class="ms-1 me-3">
-                <div>页</div>
+                <div>
+                    <nav>
+                        <ul class="pagination pagination-sm ">
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Previous"
+                                   data-page="{{ current_page - 1  if (current_page - 1) > 0 else 1 }}">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            {% for i in range(1,total_page + 1) %}
+                                <li class="page-item"><a class="page-link" href="#" data-page="{{ i }}">{{ i }}</a></li>
+                            {% endfor %}
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Next"
+                                   data-page="{{ current_page + 1 if (current_page + 1) <= total_page else total_page }}">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <input
+                            class="form-control"
+                            type="hidden"
+                            name="current_page"
+                            id="current_page"
+                    />
+                </div>
+                <div class="ms-4 me-2">
+                    <div class="border border-1">{{ current_page }} / {{ total_page }}</div>
+                </div>
+                <div class="ms-1 me-3">
+                    <div>页</div>
+                </div>
             </div>
         </div>
+
     </form>
 </div>
 <script src="/static/js/show1.js"></script>

@@ -11,8 +11,11 @@ const radios = tbody.querySelectorAll('.form-check-input')
 let value = {}
 
 function All(...args) {
-    if (args[0] === 'dels' && (allRadiosValue.value === '' || allRadiosValue.value === '{}')) {
-        return
+    if (args[0] === 'dels') {
+        form.action = '/multidel'
+        if (allRadiosValue.value === '' || allRadiosValue.value === '{}') {
+            return
+        }
     }
     form.submit()
 }
