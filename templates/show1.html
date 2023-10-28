@@ -81,7 +81,7 @@
                 <div class="col-2">
                     <!-- Button trigger modal -->
                     <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal" id="updateMany">
+                            data-bs-target="#exampleModal">
                         批量修改
                     </button>
                 </div>
@@ -217,16 +217,21 @@
                                 {% for item in datas %}
                                     <tr>
                                         {% for a in item %}
-                                            <td>{{ a }}</td>
+                                            <td>
+                                                <input class="form-control" value="{{ a }}" {% if item[0] == a %}
+                                                       disabled {% endif %}>
+                                            </td>
                                         {% endfor %}
                                     </tr>
                                 {% endfor %}
                                 </tbody>
                             </table>
                         </div>
+                        <input type="hidden" id="all-updates-data" name="all-updates-data" class="form-control"
+                               value="">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary">提交</button>
+                        <button type="button" class="btn btn-primary" id="updateMany">提交</button>
                     </div>
                 </div>
             </div>

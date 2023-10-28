@@ -1,8 +1,9 @@
-import math
 import json
 import logging
+import math
 
-from flask import Flask, flash, render_template, request, url_for, redirect, session
+from flask import Flask, flash, render_template, request, redirect, session
+
 from DBFactory import *
 
 app = Flask(__name__)
@@ -11,7 +12,6 @@ app = Flask(__name__)
 formatter = logging.Formatter(
     "[%(levelname)s][%(asctime)s] %(filename)s-%(funcName)s:%(lineno)d - %(message)s"
 )
-
 
 # 设置日志处理器为流处理器,并指定格式化器
 file_handler = logging.StreamHandler()
@@ -95,26 +95,26 @@ def index():
     page_size = 10
     current_page = 1
     if "page_size" in request.args and not (
-        request.args["page_size"] == ""
-        or request.args["page_size"] is None
-        or request.args["page_size"] == " "
+            request.args["page_size"] == ""
+            or request.args["page_size"] is None
+            or request.args["page_size"] == " "
     ):
         page_size = request.args["page_size"]
         page_size = int(page_size)
         log.debug(f"page_size被改为非默认值 {page_size}")
     if "current_page" in request.args and not (
-        request.args["current_page"] == ""
-        or request.args["current_page"] is None
-        or request.args["current_page"] == " "
+            request.args["current_page"] == ""
+            or request.args["current_page"] is None
+            or request.args["current_page"] == " "
     ):
         current_page = request.args["current_page"]
         current_page = int(current_page)
         log.debug(f"current_page被改为非默认值 {current_page}")
     for key in request.args:
         if (
-            key in stu_table_fieldname
-            and request.args[key] != None
-            and request.args[key] != ""
+                key in stu_table_fieldname
+                and request.args[key] != None
+                and request.args[key] != ""
         ):
             where_str.append(f"{key} like '%{request.args[key]}%'")
     if len(where_str) > 0:
@@ -123,7 +123,7 @@ def index():
     result = dbf.do(sql)
     total_size = len(result)
     if total_size > page_size:
-        result = result[(current_page - 1) * page_size : current_page * page_size]
+        result = result[(current_page - 1) * page_size: current_page * page_size]
     fields = dbf.get_fields(tablename)
     fields = fields[: len(fields) - 1]
     fields.append("专业")
@@ -136,6 +136,7 @@ def index():
         current_page=current_page,
         stu_name=request.args.get("stu_name", ""),
         stu_id=request.args.get("stu_id", ""),
+        all_radios_value=request.args.get("all-radios-value", ""),
     )
 
 

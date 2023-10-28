@@ -5,6 +5,9 @@ const tbody = document.querySelector('tbody')
 const form = document.querySelector('form')
 const pageLinks = document.querySelectorAll('.page-link')
 const currentPage = document.querySelector('#current_page')
+const updateMany = document.querySelector('#updateMany')
+const updateTable = document.querySelector('.modal-body').querySelector('table')
+const allUpdateData = document.querySelector('#all-updates-data')
 
 const radios = tbody.querySelectorAll('.form-check-input')
 
@@ -14,6 +17,11 @@ function All(...args) {
     if (args[0] === 'dels') {
         form.action = '/multidel'
         if (allRadiosValue.value === '' || allRadiosValue.value === '{}') {
+            return
+        }
+    } else if (args[0] === 'updates') {
+        form.action = '/multupdate'
+        if (allUpdateData.value === '' || allUpdateData.value === '[]') {
             return
         }
     }
@@ -65,5 +73,18 @@ pageLinks.forEach((pageLink) => {
     })
 })
 
-
+updateMany.addEventListener('click', () => {
+    let datas = []
+    let trs = updateTable.querySelector('tbody').querySelectorAll('tr')
+    trs.forEach((tr) => {
+        let data = []
+        let inputs = tr.querySelectorAll('input')
+        inputs.forEach((input) => {
+            data.push(input.value)
+        })
+        datas.push(data)
+    })
+    allUpdateData.value = JSON.stringify(datas)
+    All('updates')
+})
 
