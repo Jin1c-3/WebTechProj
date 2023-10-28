@@ -1,6 +1,7 @@
 import json
 import logging
 import math
+import re
 
 from flask import Flask, flash, render_template, request, redirect, session
 
@@ -95,26 +96,26 @@ def index():
     page_size = 10
     current_page = 1
     if "page_size" in request.args and not (
-            request.args["page_size"] == ""
-            or request.args["page_size"] is None
-            or request.args["page_size"] == " "
+        request.args["page_size"] == ""
+        or request.args["page_size"] is None
+        or request.args["page_size"] == " "
     ):
         page_size = request.args["page_size"]
         page_size = int(page_size)
         log.debug(f"page_size被改为非默认值 {page_size}")
     if "current_page" in request.args and not (
-            request.args["current_page"] == ""
-            or request.args["current_page"] is None
-            or request.args["current_page"] == " "
+        request.args["current_page"] == ""
+        or request.args["current_page"] is None
+        or request.args["current_page"] == " "
     ):
         current_page = request.args["current_page"]
         current_page = int(current_page)
         log.debug(f"current_page被改为非默认值 {current_page}")
     for key in request.args:
         if (
-                key in stu_table_fieldname
-                and request.args[key] != None
-                and request.args[key] != ""
+            key in stu_table_fieldname
+            and request.args[key] != None
+            and request.args[key] != ""
         ):
             where_str.append(f"{key} like '%{request.args[key]}%'")
     if len(where_str) > 0:
@@ -123,7 +124,7 @@ def index():
     result = dbf.do(sql)
     total_size = len(result)
     if total_size > page_size:
-        result = result[(current_page - 1) * page_size: current_page * page_size]
+        result = result[(current_page - 1) * page_size : current_page * page_size]
     fields = dbf.get_fields(tablename)
     fields = fields[: len(fields) - 1]
     fields.append("专业")
@@ -219,6 +220,52 @@ def upadte():
         stu_profession_id=request.form["stu_profession"],
     )
     dbf.update(data, "student_info")
+    flash("修改成功！", category="success")
+    return redirect("/")
+
+
+@app.get("/multupdate")
+def multiupdate():
+    if not validate_login():
+        flash("请先登录", category="danger")
+        return redirect("login")
+    log.debug("request.args: %s", dict_str(request.args))
+    students = json.loads(request.args["all-updates-data"])
+    for s in students:
+        stu_dict = {
+            "stu_id": s[0],
+            "stu_name": s[1],
+            "stu_sex": s[2],
+            "stu_age": s[3],
+            "stu_origin": s[4],
+            "stu_profession_id": 0,
+        }
+        # 检查名字是否合法
+        if not re.match(r"^[\u4e00-\u9fa5]{2,4}$", stu_dict["stu_name"]):
+            flash("修改失败！名字不合法", category="danger")
+            return redirect("/")
+        # 检查性别是否合法
+        if stu_dict['stu_sex'] not in ['男','女']:
+            flash("修改失败！性别不合法", category="danger")
+            return redirect("/")
+        # 检查年龄是否合法
+        if not re.match(r"^[0-9]{1,2}$", stu_dict["stu_age"]):
+            flash("修改失败！年龄不合法", category="danger")
+            return redirect("/")
+        # 检查籍贯是否合法
+        if not re.match(r"^[\u4e00-\u9fa5]{2,4}$", stu_dict["stu_origin"]):
+            flash("修改失败！籍贯不合法", category="danger")
+            return redirect("/")
+        # 检查专业是否合法
+        stu_profession = s[5]
+        for profession in dbf.all("stu_profession"):
+            if stu_profession == profession[1]:
+                stu_dict["stu_profession_id"] = profession[0]
+                break
+        if stu_dict["stu_profession_id"] == 0:
+            flash("修改失败！专业不存在", category="danger")
+            return redirect("/")
+        dbf.update(stu_dict, "student_info")
     flash("修改成功！", category="success")
     return redirect("/")
 
