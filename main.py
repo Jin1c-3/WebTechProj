@@ -66,7 +66,7 @@ def login():
         return render_template("login.html")
     dbf.register(username, password)
     flash("注册成功！请再次输入密码后点击登录", category="success")
-    return render_template("login.html", username=username)
+    return render_template("login.html")
 
 
 @app.get("/")
@@ -272,4 +272,4 @@ def multiupdate():
 
 if __name__ == "__main__":
     app.debug = True
-    app.run()
+    app.run(port=50050)
